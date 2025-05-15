@@ -1,0 +1,2745 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>مراجعه الامتحان لخدمة مدارس الأحد</title>
+    <style>
+      /* General Styles and Reset */
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: "Arial", sans-serif;
+      }
+
+      :root {
+        --primary-color: #5e60ce;
+        --primary-gradient: linear-gradient(135deg, #5e60ce, #6930c3);
+        --secondary-color: #ffd166;
+        --secondary-gradient: linear-gradient(135deg, #ffd166, #ffb347);
+        --success-color: #2ec4b6;
+        --success-gradient: linear-gradient(135deg, #2ec4b6, #29bb9c);
+        --error-color: #ef476f;
+        --error-gradient: linear-gradient(135deg, #ef476f, #e5383b);
+        --bg-color: #f8f7ff;
+        --bg-gradient: linear-gradient(135deg, #f8f7ff, #e7e5ff);
+        --boys-color: #5e60ce;
+        --boys-gradient: linear-gradient(135deg, #5e60ce, #6930c3);
+        --girls-color: #f72585;
+        --girls-gradient: linear-gradient(135deg, #f72585, #b5179e);
+        --text-color: #272343;
+        --light-color: #ffffff;
+        --border-radius: 16px;
+        --box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+      }
+
+      @font-face {
+        font-family: "DINNext";
+        src: url("https://cdnjs.cloudflare.com/ajax/libs/DINNextLTPro/1.0.0/DINNextLTPro-Regular.woff2")
+          format("woff2");
+        font-weight: normal;
+        font-style: normal;
+      }
+
+      body {
+        direction: rtl;
+        background: var(--bg-gradient);
+        color: var(--text-color);
+        min-height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 20px;
+        padding: 1rem;
+        font-family: "DINNext", "Arial", sans-serif;
+      }
+
+      .container {
+        width: 90%;
+        max-width: 1200px;
+        background-color: var(--light-color);
+        border-radius: var(--border-radius);
+        box-shadow: var(--box-shadow);
+        overflow: hidden;
+        position: relative;
+        padding: 2rem;
+        animation: fadeIn 0.8s ease-out;
+      }
+
+      /* Typography */
+      h1,
+      h2,
+      h3 {
+        margin-bottom: 1.5rem;
+        text-align: center;
+        color: var(--primary-color);
+        filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+      }
+
+      .main-title {
+        font-size: 3rem;
+        margin-bottom: 2rem;
+        color: transparent;
+        background: var(--primary-gradient);
+        -webkit-background-clip: text;
+        background-clip: text;
+        position: relative;
+      }
+
+      .main-title::after {
+        content: "";
+        display: block;
+        width: 80px;
+        height: 4px;
+        background: var(--secondary-gradient);
+        border-radius: 2px;
+        margin: 10px auto 0;
+      }
+
+      p {
+        margin-bottom: 1rem;
+        line-height: 1.6;
+      }
+
+      /* Button Styles */
+      .btn {
+        padding: 1rem 2rem;
+        background: var(--light-color);
+        color: var(--text-color);
+        border: none;
+        border-radius: 30px;
+        cursor: pointer;
+        font-size: 1.2rem;
+        transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        margin-top: 1.5rem;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        position: relative;
+        overflow: hidden;
+        font-weight: bold;
+      }
+
+      .btn::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(255, 255, 255, 0.2);
+        transform: translateX(-100%);
+        transition: transform 0.3s ease;
+      }
+
+      .btn:hover::before {
+        transform: translateX(0);
+      }
+
+      .primary-btn {
+        background: var(--primary-gradient);
+        color: white;
+      }
+
+      .primary-btn:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 10px 20px rgba(94, 96, 206, 0.4);
+      }
+
+      .primary-btn:active {
+        transform: translateY(0);
+      }
+
+      .primary-btn:disabled {
+        background: linear-gradient(135deg, #c5c5c5, #a0a0a0);
+        cursor: not-allowed;
+        transform: none;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+      }
+
+      /* Screen Handling */
+      .screen {
+        display: none;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 2rem;
+        min-height: 80vh;
+        opacity: 0;
+        transform: translateY(20px);
+      }
+
+      .screen.active {
+        display: flex;
+        animation: fadeInUp 0.6s forwards;
+      }
+
+      @keyframes fadeInUp {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+        }
+        to {
+          opacity: 1;
+        }
+      }
+
+      /* Start Screen Styles */
+      .church-info {
+        text-align: center;
+        margin-bottom: 2.5rem;
+        background: rgba(255, 255, 255, 0.8);
+        padding: 1.5rem;
+        border-radius: var(--border-radius);
+        box-shadow: var(--box-shadow);
+        border: 2px dashed var(--secondary-color);
+        position: relative;
+      }
+
+      .church-info::before,
+      .church-info::after {
+        content: "✝️";
+        position: absolute;
+        top: -10px;
+        font-size: 1.5rem;
+      }
+
+      .church-info::before {
+        left: 20px;
+      }
+
+      .church-info::after {
+        right: 20px;
+      }
+
+      .team-setup {
+        display: flex;
+        justify-content: space-around;
+        width: 100%;
+        margin-bottom: 2.5rem;
+        gap: 2rem;
+      }
+
+      .team-boys,
+      .team-girls {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 1.5rem;
+        border-radius: var(--border-radius);
+        width: 45%;
+        box-shadow: var(--box-shadow);
+        transition: transform 0.3s ease;
+      }
+
+      .team-boys:hover,
+      .team-girls:hover {
+        transform: translateY(-5px);
+      }
+
+      .team-boys {
+        background: linear-gradient(
+          to bottom right,
+          rgba(94, 96, 206, 0.1),
+          rgba(105, 48, 195, 0.1)
+        );
+        border: 2px solid var(--boys-color);
+        position: relative;
+      }
+
+      .team-girls {
+        background: linear-gradient(
+          to bottom right,
+          rgba(247, 37, 133, 0.1),
+          rgba(181, 23, 158, 0.1)
+        );
+        border: 2px solid var(--girls-color);
+        position: relative;
+      }
+
+      .team-boys::before {
+        content: "👦";
+        position: absolute;
+        top: -15px;
+        right: -15px;
+        font-size: 1.8rem;
+        background: var(--boys-gradient);
+        width: 40px;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        box-shadow: 0 2px 10px rgba(94, 96, 206, 0.4);
+      }
+
+      .team-girls::before {
+        content: "👧";
+        position: absolute;
+        top: -15px;
+        right: -15px;
+        font-size: 1.8rem;
+        background: var(--girls-gradient);
+        width: 40px;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        box-shadow: 0 2px 10px rgba(247, 37, 133, 0.4);
+      }
+
+      .team-setup input {
+        padding: 0.8rem;
+        margin: 0.8rem 0;
+        border: 2px solid #e0e0e0;
+        border-radius: 10px;
+        width: 90%;
+        font-size: 1.1rem;
+        text-align: center;
+        transition: all 0.3s ease;
+        box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+      }
+
+      .team-setup input:focus {
+        border-color: var(--primary-color);
+        outline: none;
+        box-shadow: 0 0 0 3px rgba(94, 96, 206, 0.2);
+      }
+
+      .points {
+        font-size: 1.8rem;
+        margin-top: 1.5rem;
+        font-weight: bold;
+        background: rgba(255, 255, 255, 0.9);
+        padding: 0.5rem 1.5rem;
+        border-radius: 30px;
+        box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+      }
+
+      /* Question Screen Styles */
+      .quiz-header {
+        display: flex;
+        justify-content: space-between;
+        width: 100%;
+        margin-bottom: 2.5rem;
+        background: rgba(255, 255, 255, 0.8);
+        border-radius: var(--border-radius);
+        padding: 1rem;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+      }
+
+      .teams-points {
+        display: flex;
+        gap: 1.5rem;
+      }
+
+      .team-points {
+        padding: 0.8rem 1.5rem;
+        border-radius: 30px;
+        font-weight: bold;
+        box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+        transition: all 0.3s ease;
+      }
+
+      .team-points:hover {
+        transform: translateY(-2px);
+      }
+
+      .team-points.boys {
+        background: linear-gradient(
+          to right,
+          rgba(94, 96, 206, 0.2),
+          rgba(105, 48, 195, 0.2)
+        );
+        color: var(--boys-color);
+        border: 1px solid rgba(94, 96, 206, 0.3);
+      }
+
+      .team-points.girls {
+        background: linear-gradient(
+          to right,
+          rgba(247, 37, 133, 0.2),
+          rgba(181, 23, 158, 0.2)
+        );
+        color: var(--girls-color);
+        border: 1px solid rgba(247, 37, 133, 0.3);
+      }
+
+      .current-team {
+        font-weight: bold;
+        background: var(--secondary-gradient);
+        padding: 0.8rem 1.5rem;
+        border-radius: 30px;
+        box-shadow: 0 4px 10px rgba(255, 209, 102, 0.4);
+        animation: pulse 2s infinite;
+      }
+
+      .progress {
+        background: var(--secondary-gradient);
+        padding: 0.8rem 1.5rem;
+        border-radius: 30px;
+        font-weight: bold;
+        box-shadow: 0 4px 10px rgba(255, 209, 102, 0.4);
+      }
+
+      .question-container {
+        width: 100%;
+        text-align: center;
+        margin-bottom: 2.5rem;
+        background: white;
+        padding: 2rem;
+        border-radius: var(--border-radius);
+        box-shadow: var(--box-shadow);
+        border: 2px solid rgba(94, 96, 206, 0.2);
+        position: relative;
+      }
+
+      .question-container::before {
+        content: "❓";
+        position: absolute;
+        top: -20px;
+        left: 50%;
+        transform: translateX(-50%);
+        font-size: 2rem;
+        background: var(--primary-gradient);
+        width: 50px;
+        height: 50px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        color: white;
+        box-shadow: 0 4px 10px rgba(94, 96, 206, 0.4);
+      }
+
+      .question {
+        font-size: 2rem;
+        margin-bottom: 2.5rem;
+        color: var(--text-color);
+        font-weight: bold;
+      }
+
+      .options {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1.5rem;
+        width: 100%;
+      }
+
+      .option {
+        padding: 1.2rem;
+        background: white;
+        border: 2px solid #e0e0e0;
+        border-radius: 15px;
+        cursor: pointer;
+        transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        font-size: 1.2rem;
+        text-align: center;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+      }
+
+      .option:hover {
+        transform: translateY(-5px);
+        border-color: var(--primary-color);
+        box-shadow: 0 8px 20px rgba(94, 96, 206, 0.2);
+      }
+
+      .option.selected {
+        background: var(--primary-gradient);
+        color: white;
+        border-color: var(--primary-color);
+        box-shadow: 0 8px 20px rgba(94, 96, 206, 0.3);
+        transform: translateY(-5px);
+      }
+
+      /* Feedback Screen Styles */
+      .feedback-container {
+        width: 100%;
+        text-align: center;
+        margin: 3rem 0;
+        position: relative;
+      }
+
+      .feedback-text {
+        font-size: 3rem;
+        margin-bottom: 2rem;
+        text-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      }
+
+      .feedback-text.correct {
+        color: var(--success-color);
+        animation: scaleUp 0.5s ease-out;
+      }
+
+      .feedback-text.incorrect {
+        color: var(--error-color);
+        animation: shakeEffect 0.5s ease-out;
+      }
+
+      @keyframes scaleUp {
+        0% {
+          transform: scale(0.5);
+          opacity: 0;
+        }
+        70% {
+          transform: scale(1.2);
+        }
+        100% {
+          transform: scale(1);
+          opacity: 1;
+        }
+      }
+
+      @keyframes shakeEffect {
+        0%,
+        100% {
+          transform: translateX(0);
+        }
+        20%,
+        60% {
+          transform: translateX(-10px);
+        }
+        40%,
+        80% {
+          transform: translateX(10px);
+        }
+      }
+
+      .correct-answer {
+        background: linear-gradient(
+          to bottom right,
+          rgba(46, 196, 182, 0.1),
+          rgba(41, 187, 156, 0.1)
+        );
+        padding: 2rem;
+        border-radius: var(--border-radius);
+        margin-top: 2rem;
+        border: 2px solid var(--success-color);
+        box-shadow: 0 10px 30px rgba(46, 196, 182, 0.2);
+        animation: fadeIn 0.5s ease 0.3s forwards;
+        opacity: 0;
+        position: relative;
+      }
+
+      .correct-answer::before {
+        content: "✓";
+        position: absolute;
+        top: -20px;
+        left: 50%;
+        transform: translateX(-50%);
+        font-size: 1.5rem;
+        background: var(--success-gradient);
+        width: 40px;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        color: white;
+        box-shadow: 0 4px 10px rgba(46, 196, 182, 0.4);
+      }
+
+      .correct-answer p:first-child {
+        font-weight: bold;
+        margin-bottom: 1rem;
+        font-size: 1.2rem;
+        color: var(--success-color);
+      }
+
+      #correct-answer-text {
+        font-size: 1.5rem;
+        font-weight: bold;
+      }
+
+      /* End Screen Styles */
+      .final-pointss {
+        display: flex;
+        justify-content: space-around;
+        width: 100%;
+        margin: 2.5rem 0;
+      }
+
+      .final-pointss .team-points {
+        padding: 1.5rem 2.5rem;
+        font-size: 1.8rem;
+        transform: none;
+      }
+
+      .final-pointss .team-points:hover {
+        transform: scale(1.05);
+      }
+
+      .winner-announcement {
+        text-align: center;
+        margin: 2.5rem 0;
+        background: white;
+        padding: 2rem;
+        border-radius: var(--border-radius);
+        box-shadow: var(--box-shadow);
+        position: relative;
+        border: 3px solid var(--success-color);
+      }
+
+      .winner-announcement::before {
+        content: "🏆";
+        position: absolute;
+        top: -25px;
+        left: 50%;
+        transform: translateX(-50%);
+        font-size: 2.5rem;
+        animation: float 3s ease-in-out infinite;
+      }
+
+      @keyframes float {
+        0%,
+        100% {
+          transform: translateY(0) translateX(-50%);
+        }
+        50% {
+          transform: translateY(-10px) translateX(-50%);
+        }
+      }
+
+      .winner {
+        font-size: 3rem;
+        color: var(--success-color);
+        margin-top: 1.5rem;
+        font-weight: bold;
+        animation: winnerPulse 2s infinite;
+        background: linear-gradient(
+          to right,
+          var(--success-color),
+          var(--primary-color),
+          var(--success-color)
+        );
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+        background-size: 200% auto;
+      }
+
+      @keyframes winnerPulse {
+        0% {
+          background-position: 0% center;
+        }
+        100% {
+          background-position: 200% center;
+        }
+      }
+
+      .encouragement {
+        text-align: center;
+        margin: 2.5rem 0;
+        font-size: 1.8rem;
+        background: linear-gradient(
+          to right,
+          var(--primary-color),
+          var(--secondary-color)
+        );
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+        font-weight: bold;
+      }
+
+      /* Confetti animation for winner screen */
+      .confetti {
+        position: absolute;
+        width: 10px;
+        height: 10px;
+        background-color: #f2d74e;
+        opacity: 0;
+        animation: confetti-fall 3s ease-in-out infinite;
+      }
+
+      .confetti:nth-child(2n) {
+        background-color: #95c3de;
+      }
+
+      .confetti:nth-child(3n) {
+        background-color: #ff9a91;
+      }
+
+      .confetti:nth-child(4n) {
+        background-color: #f2b8c6;
+      }
+
+      .confetti:nth-child(5n) {
+        background-color: #97d5a3;
+      }
+
+      @keyframes confetti-fall {
+        0% {
+          transform: translateY(-100px) rotate(0deg);
+          opacity: 1;
+        }
+        100% {
+          transform: translateY(1000px) rotate(360deg);
+          opacity: 0;
+        }
+      }
+
+      /* Pulse animation */
+      @keyframes pulse {
+        0%,
+        100% {
+          transform: scale(1);
+        }
+        50% {
+          transform: scale(1.05);
+        }
+      }
+
+      /* Responsive adjustments */
+      @media (max-width: 768px) {
+        body {
+          font-size: 16px;
+        }
+
+        .container {
+          width: 95%;
+          padding: 1rem;
+        }
+
+        .main-title {
+          font-size: 2rem;
+        }
+
+        .team-setup {
+          flex-direction: column;
+          align-items: center;
+        }
+
+        .team-boys,
+        .team-girls {
+          width: 90%;
+          margin-bottom: 2rem;
+        }
+
+        .options {
+          grid-template-columns: 1fr;
+        }
+
+        .quiz-header {
+          flex-direction: column;
+          gap: 1rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Main container -->
+    <div class="container">
+      <!-- Start and Team Setup Screen -->
+      <section id="start-screen" class="screen active">
+        <h1 class="main-title">مراجعه الامتحان لخدمة مدارس الأحد</h1>
+        <div class="church-info">
+          <p>كنيسة الانبا انطونيوس باسوس</p>
+          <p>خدمة مدارس الأحد</p>
+          <p>الصف الرابع (فصل القديس يوسف الصديق)</p>
+        </div>
+        <div class="team-setup">
+          <div class="team-boys">
+            <label for="boys-team-name">اسم فريق الأولاد:</label>
+            <input type="text" id="boys-team-name" placeholder="فريق الأولاد" />
+            <div class="points">
+              <span>النقاط:</span>
+              <span id="boys-points">0</span>
+            </div>
+          </div>
+          <div class="team-girls">
+            <label for="girls-team-name">اسم فريق البنات:</label>
+            <input type="text" id="girls-team-name" placeholder="فريق البنات" />
+            <div class="points">
+              <span>النقاط:</span>
+              <span id="girls-points">0</span>
+            </div>
+          </div>
+        </div>
+        <button id="start-btn" class="btn primary-btn">بدء المسابقة</button>
+      </section>
+
+      <!-- Question Display Screen -->
+      <section id="question-screen" class="screen">
+        <div class="quiz-header">
+          <div class="teams-points">
+            <div class="team-points boys">
+              <span id="question-boys-team">فريق الأولاد:</span>
+              <span id="question-boys-points">0</span>
+            </div>
+            <div class="team-points girls">
+              <span id="question-girls-team">فريق البنات:</span>
+              <span id="question-girls-points">0</span>
+            </div>
+          </div>
+          <div class="progress">
+            <span id="current-question">1</span>/<span id="total-questions"
+              >10</span
+            >
+          </div>
+          <div class="current-team">
+            <span>دور فريق: </span>
+            <span id="current-team-name">فريق الأولاد</span>
+          </div>
+        </div>
+        <div class="question-container">
+          <h2 id="question-number">السؤال رقم ١</h2>
+          <p id="question-text" class="question">نص السؤال يظهر هنا</p>
+          <div id="options-container" class="options">
+            <!-- Options will be inserted here dynamically -->
+          </div>
+        </div>
+        <button id="confirm-btn" class="btn primary-btn" disabled>
+          تأكيد الإجابة
+        </button>
+      </section>
+
+      <!-- Answer Feedback Screen -->
+      <section id="feedback-screen" class="screen">
+        <div class="quiz-header">
+          <div class="teams-points">
+            <div class="team-points boys">
+              <span id="feedback-boys-team">فريق الأولاد:</span>
+              <span id="feedback-boys-points">0</span>
+            </div>
+            <div class="team-points girls">
+              <span id="feedback-girls-team">فريق البنات:</span>
+              <span id="feedback-girls-points">0</span>
+            </div>
+          </div>
+        </div>
+        <div class="feedback-container">
+          <h2 id="feedback-result" class="feedback-text">إجابة صحيحة!</h2>
+          <div id="correct-answer-container" class="correct-answer">
+            <p>الإجابة الصحيحة هي:</p>
+            <p id="correct-answer-text"></p>
+          </div>
+        </div>
+        <button id="next-btn" class="btn primary-btn">السؤال التالي</button>
+      </section>
+
+      <!-- End of Quiz and Winner Announcement Screen -->
+      <section id="end-screen" class="screen">
+        <div id="confetti-container"></div>
+        <h1 class="main-title">نهاية المسابقة</h1>
+        <div class="final-pointss">
+          <div class="team-points boys">
+            <span id="end-boys-team">فريق الأولاد:</span>
+            <span id="end-boys-points">0</span>
+          </div>
+          <div class="team-points girls">
+            <span id="end-girls-team">فريق البنات:</span>
+            <span id="end-girls-points">0</span>
+          </div>
+        </div>
+        <div class="winner-announcement">
+          <h2>الفريق الفائز</h2>
+          <p id="winner-team" class="winner">فريق الأولاد</p>
+        </div>
+        <div class="encouragement">
+          <p>أحسنتم جميعاً! شكراً لمشاركتكم في المسابقة</p>
+        </div>
+        <button id="restart-btn" class="btn primary-btn">
+          بدء مسابقة جديدة
+        </button>
+      </section>
+    </div>
+
+    <script>
+      // Quiz questions data
+      const quizQuestions = [
+        {
+          question: "عاش لعازر واخوته في قرية .......... .",
+          correctAnswer: "بيت عنيا",
+          options: ["بيت عنيا", "بيت حسدا", "بيت صيدا"],
+          points: 5, // Storing points as a simple integer
+        },
+        {
+          question: "يعمل بطرس في مهنة .......... .",
+          correctAnswer: "صيد السمك",
+          options: ["صنع الخيام", "صيد السمك", "رعى الأغنام"],
+          points: 5,
+        },
+        {
+          question: "علية صهيون هي بيت .......... .",
+          correctAnswer: "مار مرقس",
+          options: ["يوحنا", "مار مرقس", "بطرس"],
+          points: 5,
+        },
+        {
+          question: "إن أردت أن تكون كاملاً فإعط كل أموالك لـ .......... .",
+          correctAnswer: "الفقراء",
+          options: ["الاغنياء", "الأصدقاء", "الفقراء"],
+          points: 5,
+        },
+        {
+          question: "شفى الرب يسوع المولود أعمى يوم .......... .",
+          correctAnswer: "السبت",
+          options: ["السبت", "الاحد", "الأثنين"],
+          points: 5,
+        },
+        {
+          question: "صار الأنبا هيدرا أسقفاً على .......... .",
+          correctAnswer: "أسوان",
+          options: ["أسوان", "الاسكندرية", "المنيا"],
+          points: 5,
+        },
+        {
+          question: "أنكر بطرس الرب يسوع .......... مرات.",
+          correctAnswer: "ثلاث",
+          options: ["ثلاث", "أربع", "خمس"],
+          points: 5,
+        },
+        {
+          question: "وافق فرعون على خروج شعب الله بعد ضربة .......... .",
+          correctAnswer: "الابكار",
+          options: ["الظلام", "الابكار", "الضفادع"],
+          points: 5,
+        },
+        {
+          question: "يوجد دير الانبا شنودة في محافظة .......... .",
+          correctAnswer: "سوهاج",
+          options: ["الفيوم", "سوهاج", "الأسكندرية"],
+          points: 5,
+        },
+        {
+          question: "إشتهر القديس يوحنا بفضيلة .......... .",
+          correctAnswer: "المحبة",
+          options: ["القوة", "التعصب", "المحبة"],
+          points: 5,
+        },
+        {
+          question: "التلميذ الذى كان يتكئ على صدر يسوع .......... .",
+          correctAnswer: "يوحنا الحبيب",
+          options: ["بطرس", "يوحنا الحبيب", "بولس"],
+          points: 5,
+        },
+        {
+          question: "أنشأ الأنبا شنودة بالدير .......... .",
+          correctAnswer: "مدرستين",
+          options: ["مدرستين", "ثلاث مدارس", "أربعه مدارس"],
+          points: 5,
+        },
+        {
+          question: "تناول السيد المسيح الفصح مع تلاميذه يوم .......... .",
+          correctAnswer: "الخميس",
+          options: ["الثلاثاء", "الأربعاء", "الخميس"],
+          points: 5,
+        },
+        {
+          question: "خرجت السامرية وقت .......... لتملأ جرتها.",
+          correctAnswer: "الظهيرة",
+          options: ["الليل", "الظهيرة", "باكراً"],
+          points: 5,
+        },
+        {
+          question: "أحب الرب يسوع السامرية لذا تعامل معها بـ .......... .",
+          correctAnswer: "كل ما سبق",
+          options: ["هدوء", "صبر", "إحترام", "كل ما سبق"],
+          points: 5,
+        },
+        {
+          question: "أرسل الرب يسوع بطرس ويوحنا ليعدوا .......... .",
+          correctAnswer: "الفصح",
+          options: ["الغرفة", "الفصح", "الاطعمة"],
+          points: 5,
+        },
+        {
+          question: "يسمى يوم تأسيس سر التناول .......... .",
+          correctAnswer: "خميس العهد",
+          options: ["خميس العهد", "خميس الوعد", "خميس الرجاء"],
+          points: 5,
+        },
+        {
+          question: "أول كنيسة فى العالم هي علية صهيون بيت .......... الرسول.",
+          correctAnswer: "مار مرقس",
+          options: [
+            "مارمينا",
+            "مار مرقس",
+            "(الخيار مكرر، الإجابة الصحيحة مار مرقس)",
+          ],
+          points: 5,
+        },
+        {
+          question: "قصة السامرية من قصص .......... .",
+          correctAnswer: "الكتاب المقدس",
+          options: ["الخيال", "الأمثال", "الكتاب المقدس"],
+          points: 5,
+        },
+        {
+          question: "كرز القديس يوحنا بمدينة .......... .",
+          correctAnswer: "أفسس",
+          options: ["أفسس", "الأسكندرية", "تونس"],
+          points: 5,
+        },
+        {
+          question: "الانبا شنودة أول من وضع نظام .......... فى الرهبنة.",
+          correctAnswer: "الشركة",
+          options: ["الوحدة", "الشركة", "الخلوة"],
+          points: 5,
+        },
+        {
+          question:
+            "أهتم الأنبا .......... باللغة .......... . (المقصود الأنبا شنودة)",
+          correctAnswer: "القبطية",
+          options: ["العربية", "القبطية", "الالمانية"],
+          points: 5,
+        },
+        {
+          question: "أحب هيدرا الصلاة وكان يسأل .......... قبل فعل أى أمر.",
+          correctAnswer: "الله",
+          options: ["الملاك", "الله", "والده"],
+          points: 5,
+        },
+        {
+          question:
+            "وهب الله الأنبا هيدرا موهبة شفاء الامراض وإخراج .......... .",
+          correctAnswer: "الشياطين",
+          options: ["الناس", "الأطفال", "الشياطين"],
+          points: 5,
+        },
+        {
+          question: "ويكون لكم .......... علامة على البيوت التي أنتم فيها.",
+          correctAnswer: "الدم",
+          options: ["خروف الفصح", "الدم", "يوحنا", "الأبكار"],
+          points: 5,
+        },
+        {
+          question: "التلميذ الذي كان يتكئ على صدر الرب يسوع هو .......... .",
+          correctAnswer: "يوحنا الحبيب",
+          options: ["بطرس", "يوحنا الحبيب", "الدم", "عشرة"],
+          points: 5,
+        },
+        {
+          question: "ضرب الله فرعون وشعب مصر .......... ضربات.",
+          correctAnswer: "عشرة",
+          options: ["سبع", "عشرة", "اثنتا عشرة", "خمس"],
+          points: 5,
+        },
+        {
+          question:
+            "أرسل الرب يسوع تلميذيه .......... و .......... ليعدا الفصح.",
+          correctAnswer: "بطرس ويوحنا",
+          options: [
+            "يوحنا وأندراوس",
+            "بطرس ويوحنا",
+            "يعقوب ويهوذا",
+            "توما ومتى",
+          ],
+          points: 5,
+        },
+        {
+          question: "وافق فرعون على خروج شعب الله بعد ضربة .......... .",
+          correctAnswer: "الأبكار",
+          options: ["الدم", "الظلام", "الأبكار", "الضفادع"],
+          points: 5,
+        },
+        {
+          question:
+            "من رموز الصليب فى العهد القديم: الحية النحاسية و .......... .",
+          correctAnswer: "خروف الفصح",
+          options: ["الدم", "خروف الفصح", "يوحنا", "بطرس"],
+          points: 5,
+        },
+        {
+          question: "يؤكل الخروف .......... .",
+          correctAnswer: "مشوياً",
+          options: ["نيئاً", "مشوياً", "مسلوقاً", "مقلياً"],
+          points: 5,
+        },
+        {
+          question: "قيل عن الانبا شنودة إنه .......... لله.",
+          correctAnswer: "إناء مختار",
+          options: ["نبي عظيم", "إناء مختار", "رسول المحبة", "معلم الأجيال"],
+          points: 5,
+        },
+        {
+          question: "المحبة لا .......... أبداً.",
+          correctAnswer: "تسقط",
+          options: ["تفشل", "تسقط", "تتغير", "تضعف"],
+          points: 5,
+        },
+        {
+          question: "أنشأ الانبا شنودة .......... بالدير.",
+          correctAnswer: "مدرستين",
+          options: ["كنيسة واحدة", "مدرستين", "ثلاثة مستشفيات", "مكتبة كبيرة"],
+          points: 5,
+        },
+        {
+          question: "هذه .......... أن تحبوا بعضكم بعضا.",
+          correctAnswer: "وصيتي",
+          options: ["شريعتي", "وصيتي", "نصيحتي", "طلبي"],
+          points: 5,
+        },
+        {
+          question:
+            "تقابل يوحنا الحبيب مع شاب بمدينة .......... وصار تلميذاً له.",
+          correctAnswer: "أفسس",
+          options: ["أورشليم", "أفسس", "الإسكندرية", "روما"],
+          points: 5,
+        },
+        {
+          question: "علية صهيون هو بيت .......... .",
+          correctAnswer: "مارمرقس",
+          options: ["يوحنا المعمدان", "مارمرقس", "لعازر", "سمعان الفريسي"],
+          points: 5,
+        },
+        {
+          question:
+            "قال الرب يسوع للشاب الغنى: إن أردت أن تكون كاملاً إعط كل أموالك لـ .......... .",
+          correctAnswer: "الفقراء",
+          options: ["الكهنة", "الفقراء", "الهيكل", "التلاميذ"],
+          points: 5,
+        },
+        {
+          question: "تناول السيد المسيح الفصح مع تلاميذه يوم .......... .",
+          correctAnswer: "الخميس",
+          options: ["الأربعاء", "الخميس", "الجمعة", "السبت"],
+          points: 5,
+        },
+        {
+          question: "دير الانبا شنودة بمحافظة .......... .",
+          correctAnswer: "سوهاج",
+          options: ["أسيوط", "سوهاج", "المنيا", "قنا"],
+          points: 5,
+        },
+        {
+          question: "تقابل الرب يسوع مع المرأة السامرية عند بئر .......... .",
+          correctAnswer: "يعقوب",
+          options: ["سلوام", "يعقوب", "إبراهيم", "يوسف"],
+          points: 5,
+        },
+        {
+          question: "أقام الرب يسوع لعازر بعد .......... أيام من موته.",
+          correctAnswer: "أربعة",
+          options: ["ثلاثة", "أربعة", "خمسة", "سبعة"],
+          points: 5,
+        },
+        {
+          question: "هوذا .......... الله الذي يرفع .......... العالم.",
+          correctAnswer: "حمل - خطية",
+          options: ["نور - ظلمة", "حمل - خطية", "كلمة - جهل", "روح - ضعف"],
+          points: 5,
+        },
+        {
+          question:
+            "قال الرب يسوع للمولود أعمى: إذهب وإغتسل في بركة .......... .",
+          correctAnswer: "سلوام",
+          options: ["بيت حسدا", "سلوام", "الجليل", "الأردن"],
+          points: 5,
+        },
+        {
+          question:
+            "الرسول الذي إشتهر بالمحبة ودُعي رسول المحبة هو .......... .",
+          correctAnswer: "يوحنا الحبيب",
+          options: [
+            "بطرس الرسول",
+            "يوحنا الحبيب",
+            "بولس الرسول",
+            "يعقوب الرسول",
+          ],
+          points: 5,
+        },
+        {
+          question: "حل الروح القدس على التلاميذ يوم .......... .",
+          correctAnswer: "الخمسين",
+          options: ["الفصح", "الخمسين", "العنصرة", "الأحد الجديد"],
+          points: 5,
+        },
+        {
+          question: "كرز القديس يوحنا بمدينة .......... .",
+          correctAnswer: "أفسس",
+          options: ["أورشليم", "أفسس", "كورنثوس", "روما"],
+          points: 5,
+        },
+        {
+          question: "أنكر بطرس الرب يسوع .......... مرات.",
+          correctAnswer: "ثلاث",
+          options: ["مرة واحدة", "مرتين", "ثلاث", "أربع مرات"],
+          points: 5,
+        },
+        {
+          question: "الجواب اللين يصرف .......... .",
+          correctAnswer: "الغضب",
+          options: ["الحزن", "الغضب", "الخوف", "الملل"],
+          points: 5,
+        },
+        {
+          question: "كونوا .......... بعضكم نحو بعض.",
+          correctAnswer: "لطفاء",
+          options: ["أقوياء", "لطفاء", "حكماء", "أغنياء"],
+          points: 5,
+        },
+        {
+          question: ".......... هي أم كل الفضائل.",
+          correctAnswer: "المحبة",
+          options: ["الإيمان", "الرجاء", "المحبة", "الصبر"],
+          points: 5,
+        },
+        {
+          question: "يرش دم الخروف على القائمتين والعتبة .......... .",
+          correctAnswer: "العليا",
+          options: ["السفلى", "الجانبية", "العليا", "الداخلية"],
+          points: 5,
+        },
+        {
+          question: "الانبا بيجول رئيس الدير .......... وهو خال الانبا شنودة.",
+          correctAnswer: "الأحمر",
+          options: ["الأبيض", "الأحمر", "السريان", "المحرق"],
+          points: 5,
+        },
+        {
+          question: "لقب الأنبا شنودة برئيس .......... .",
+          correctAnswer: "المتوحدين",
+          options: ["الأساقفة", "المتوحدين", "الشمامسة", "الرهبان"],
+          points: 5,
+        },
+        {
+          question: '"منذ .......... لم يسمع أن أحداً فتح عينى مولود أعمى."',
+          correctAnswer: "الدهر",
+          options: ["آدم", "نوح", "الدهر", "إبراهيم"],
+          points: 5,
+        },
+        {
+          question: 'قال الرب يسوع لـ ..........: "من الأن تكون صياداً للناس."',
+          correctAnswer: "بطرس",
+          options: ["يوحنا", "بطرس", "أندراوس", "يعقوب"],
+          points: 5,
+        },
+        {
+          question: '"أنا هو .......... والحياة، من آمن بي ولو مات فسيحيا."',
+          correctAnswer: "القيامة",
+          options: ["النور", "الطريق", "القيامة", "الحق"],
+          points: 5,
+        },
+        {
+          question: "ظل لعازر .......... أيام في القبر.",
+          correctAnswer: "أربعة",
+          options: ["يومين", "ثلاثة", "أربعة", "سبعة"],
+          points: 5,
+        },
+        {
+          question: "ندم .......... على إنكاره للرب يسوع.",
+          correctAnswer: "بطرس",
+          options: ["يوحنا", "بطرس", "يهوذا", "توما"],
+          points: 5,
+        },
+        {
+          question: "أطلق على الانبا أنطونيوس .......... و .......... .",
+          correctAnswer: "أبو الرهبان وكوكب البرية",
+          options: [
+            "أبو الكنيسة وكوكب الشرق",
+            "أبو الرهبان وكوكب البرية",
+            "أبو الشهداء وكوكب الإيمان",
+            "أبو الأساقفة وكوكب الصحراء",
+          ],
+          points: 5,
+        },
+        {
+          question: "ما هي رموز الصليب في العهد القديم؟",
+          correctAnswer: "خروف الفصح والحية النحاسية",
+          options: [
+            "خروف الفصح والعصا",
+            "الحية النحاسية والمن",
+            "خروف الفصح والحية النحاسية",
+            "تابوت العهد والمذبح",
+          ],
+          points: 5,
+        },
+        {
+          question:
+            "لماذا كان القديس يوحنا يسافر إلى بلاد كثيرة بعد حلول الروح القدس؟",
+          correctAnswer: "ليكرز ويبشر بالإنجيل",
+          options: [
+            "للتجارة والربح",
+            "لزيارة الأقارب والأصدقاء",
+            "ليكرز ويبشر بالإنجيل",
+            "للسياحة والتعرف على ثقافات جديدة",
+          ],
+          points: 5,
+        },
+        {
+          question: "كم عدد الضربات التي ضربها الله لفرعون والمصريين؟",
+          correctAnswer: "عشرة ضربات",
+          options: ["سبع ضربات", "عشرة ضربات", "اثنتا عشرة ضربة", "خمس ضربات"],
+          points: 5,
+        },
+        {
+          question: "ما هى الضربة العاشرة التى ضربها الله لفرعون والمصريين؟",
+          correctAnswer: "ضربة الأبكار",
+          options: ["ضربة الظلام", "ضربة الدم", "ضربة الأبكار", "ضربة الضفادع"],
+          points: 5,
+        },
+        {
+          question: "من هم التلاميذ الذين أرسلهم الرب يسوع ليعدوا الفصح؟",
+          correctAnswer: "بطرس ويوحنا",
+          options: [
+            "يعقوب ويوحنا",
+            "بطرس وأندراوس",
+            "بطرس ويوحنا",
+            "توما ومتى",
+          ],
+          points: 5,
+        },
+        {
+          question: "ما هي أول كنيسة فى العالم؟",
+          correctAnswer: "بيت مار مرقس (علية صهيون)",
+          options: [
+            "كنيسة القيامة",
+            "كنيسة المهد",
+            "بيت مار مرقس (علية صهيون)",
+            "كنيسة أنطاكية",
+          ],
+          points: 5,
+        },
+        {
+          question: "أين جمع الرب يسوع تلاميذه وأسس سر التناول ومتى كان ذلك؟",
+          correctAnswer: "فى بيت مار مرقس (علية صهيون) يوم خميس العهد",
+          options: [
+            "في الهيكل يوم السبت",
+            "في بيت لعازر يوم الجمعة",
+            "فى بيت مار مرقس (علية صهيون) يوم خميس العهد",
+            "في الجليل يوم الأحد",
+          ],
+          points: 5,
+        },
+        {
+          question: "أين تقابل الرب يسوع مع المرأة السامرية؟",
+          correctAnswer: "عند بئر يعقوب",
+          options: [
+            "عند بركة سلوام",
+            "عند بئر يعقوب",
+            "عند بحر الجليل",
+            "في مدينة أورشليم",
+          ],
+          points: 5,
+        },
+        {
+          question: "ما هو الماء الحى الذى تكلم عنه الرب يسوع للسامرية؟",
+          correctAnswer: "هو كلام الله ووصاياه وتعاليمه",
+          options: [
+            "ماء نبع طبيعي نقي",
+            "ماء يشفي الأمراض الجسدية",
+            "هو كلام الله ووصاياه وتعاليمه",
+            "ماء من نهر الأردن",
+          ],
+          points: 5,
+        },
+        {
+          question: "أين كرز القديس يوحنا الحبيب بالإنجيل بشكل رئيسي؟",
+          correctAnswer: "في مدينة أفسس",
+          options: [
+            "في مدينة روما",
+            "في مدينة أفسس",
+            "في مدينة الإسكندرية",
+            "في مدينة أورشليم",
+          ],
+          points: 5,
+        },
+        {
+          question: "أي من هذه الألقاب لم يُلقب به القديس يوحنا؟",
+          correctAnswer: "صياد الناس",
+          options: ["الرسولي", "الإنجيلي", "صياد الناس", "الحبيب"],
+          points: 5,
+        },
+        {
+          question: "بماذا لقب الأنبا شنودة وماذا قيل عنه؟",
+          correctAnswer: "رئيس المتوحدين وإناء مختار لله",
+          options: [
+            "رئيس الشمامسة ومعلم البرية",
+            "رئيس المتوحدين وإناء مختار لله",
+            "كوكب البرية وأبو الرهبان",
+            "عمود الدين وقديس الصعيد",
+          ],
+          points: 5,
+        },
+        {
+          question: "أي من الأعمال التالية لم يقم بها الأنبا شنودة؟",
+          correctAnswer: "بنى كنيسة القيامة",
+          options: [
+            "أنشأ مدرستين بالدير",
+            "أهتم باللغة القبطية",
+            "بنى كنيسة القيامة",
+            "قاوم الاحتلال البيزنطي",
+          ],
+          points: 5,
+        },
+        {
+          question: "متى وُلد الأنبا هيدرا (سمعان) وفي أي مدينة؟",
+          correctAnswer: "في القرن الرابع الميلادي فى مدينة أسوان",
+          options: [
+            "في القرن الثالث الميلادي في الإسكندرية",
+            "في القرن الرابع الميلادي فى مدينة أسوان",
+            "في القرن الخامس الميلادي في أنطاكية",
+            "في القرن الثاني الميلادي في روما",
+          ],
+          points: 5,
+        },
+        {
+          question: "من الذي رسم الأنبا هيدرا راهباً؟",
+          correctAnswer: "الأنبا باخوميوس",
+          options: [
+            "الأنبا أنطونيوس",
+            "الأنبا باخوميوس",
+            "الأنبا بيمن",
+            "الأنبا بولا",
+          ],
+          points: 5,
+        },
+        {
+          question: "ما هي الموهبتان اللتان منحهما الله للأنبا هيدرا؟",
+          correctAnswer: "شفاء الأمراض وإخراج الشياطين",
+          options: [
+            "صنع المعجزات وتفسير الأحلام",
+            "شفاء الأمراض وإخراج الشياطين",
+            "التكلم بألسنة وكتابة الأشعار",
+            "النبوة وتعليم اللاهوت",
+          ],
+          points: 5,
+        },
+        {
+          question: "من هو التلميذ الذي كان يتكئ على صدر الرب يسوع؟",
+          correctAnswer: "يوحنا الحبيب",
+          options: ["بطرس", "يوحنا الحبيب", "أندراوس", "يعقوب"],
+          points: 5,
+        },
+        {
+          question:
+            "لماذا سافر القديس يوحنا إلى أماكن كثيرة بعد حلول الروح القدس؟",
+          correctAnswer: "ليكرز بالإنجيل",
+          options: [
+            "لجمع التبرعات",
+            "ليكرز بالإنجيل",
+            "ليتعلم لغات جديدة",
+            "ليتجنب الاضطهاد",
+          ],
+          points: 5,
+        },
+        {
+          question:
+            'ماذا تعنى عبارة "من الآن تكون صياداً للناس" التي قالها الرب لبطرس؟',
+          correctAnswer: "أن بطرس سيخبر الناس عن الله ويجذبهم إليه",
+          options: [
+            "أن بطرس سيصطاد أنواعاً جديدة من السمك",
+            "أن بطرس سيصبح غنياً من الصيد",
+            "أن بطرس سيخبر الناس عن الله ويجذبهم إليه",
+            "أن بطرس سيترك مهنة الصيد تماماً",
+          ],
+          points: 5,
+        },
+        {
+          question: "ماذا كان يعمل بطرس قبل أن يتبع الرب يسوع؟",
+          correctAnswer: "صياد سمك",
+          options: ["نجاراً", "راعي غنم", "صياد سمك", "جابي ضرائب"],
+          points: 5,
+        },
+        {
+          question: "كم يوماً مكث لعازر في القبر قبل أن يقيمه الرب يسوع؟",
+          correctAnswer: "أربعة أيام",
+          options: ["يومين", "ثلاثة أيام", "أربعة أيام", "سبعة أيام"],
+          points: 5,
+        },
+        {
+          question: "ماذا قال الرب يسوع للمولود أعمى ليشفى؟",
+          correctAnswer: "إذهب واغتسل في بركة سلوام",
+          options: [
+            "قم واحمل سريرك وامش",
+            "إذهب واغتسل في بركة سلوام",
+            "إيمانك قد شفاك",
+            "أنا هو نور العالم",
+          ],
+          points: 5,
+        },
+        {
+          question: "ماذا طلب الرب يسوع من الشاب الغني ليرث الملكوت؟",
+          correctAnswer: "أن يحفظ الوصايا ويعطى أمواله للفقراء ويتبعه",
+          options: [
+            "أن يصوم ويصلي كثيراً",
+            "أن يحفظ الوصايا ويعطى أمواله للفقراء ويتبعه",
+            "أن يبني كنيسة كبيرة",
+            "أن يصبح تلميذاً له فقط",
+          ],
+          points: 5,
+        },
+        {
+          question: "كم مرة أنكر بطرس الرب يسوع؟",
+          correctAnswer: "ثلاث مرات",
+          options: ["مرة واحدة", "مرتين", "ثلاث مرات", "لم ينكره أبداً"],
+          points: 5,
+        },
+        {
+          question:
+            "من هو التلميذ الخائن الذى سلم السيد المسيح وما كان المقابل؟",
+          correctAnswer: "يهوذا الأسخريوطي مقابل ثلاثين من الفضة",
+          options: [
+            "توما الشكاك مقابل عشرين من الفضة",
+            "يهوذا الأسخريوطي مقابل ثلاثين من الفضة",
+            "برنابا الرسول مقابل خمسين من الذهب",
+            "سمعان القانوي مقابل مئة درهم",
+          ],
+          points: 5,
+        },
+        {
+          question: "من الذى أصدر قراراً بصلب الرب يسوع؟",
+          correctAnswer: "بيلاطس البنطي",
+          options: [
+            "هيرودس الملك",
+            "قيافا رئيس الكهنة",
+            "بيلاطس البنطي",
+            "أغسطس قيصر",
+          ],
+          points: 5,
+        },
+        {
+          question:
+            'هل العبارة التالية صحيحة أم خاطئة: "يرمز خروف الفصح للسيد المسيح الذي كان بلا عيب."؟',
+          correctAnswer: "صحيحة",
+          options: ["صحيحة", "خاطئة"],
+          points: 5,
+        },
+        {
+          question:
+            'هل العبارة التالية صحيحة أم خاطئة: "ترمز الحية النحاسية إلى الصليب."؟',
+          correctAnswer: "صحيحة",
+          options: ["صحيحة", "خاطئة"],
+          points: 5,
+        },
+        {
+          question:
+            'هل العبارة التالية صحيحة أم خاطئة: "حل الروح القدس على التلاميذ يوم الخمسين في علية صهيون."؟',
+          correctAnswer: "صحيحة",
+          options: ["صحيحة", "خاطئة"],
+          points: 5,
+        },
+        {
+          question:
+            'هل العبارة التالية صحيحة أم خاطئة: "كان فرعون يستعبد شعب الله ويضايقهم."؟',
+          correctAnswer: "صحيحة",
+          options: ["صحيحة", "خاطئة"],
+          points: 5,
+        },
+        {
+          question:
+            'هل العبارة التالية صحيحة أم خاطئة: "من يشرب من الماء الذى يعطيه الرب يسوع فلن يعطش إلى الأبد."؟',
+          correctAnswer: "صحيحة",
+          options: ["صحيحة", "خاطئة"],
+          points: 5,
+        },
+        {
+          question:
+            'هل العبارة التالية صحيحة أم خاطئة: "يسمى سر التناول بسر الأفخارستيا."؟',
+          correctAnswer: "صحيحة",
+          options: ["صحيحة", "خاطئة"],
+          points: 5,
+        },
+        {
+          question:
+            'هل العبارة التالية صحيحة أم خاطئة: "يرش دم الخروف على القائمتين والعتبة العليا."؟',
+          correctAnswer: "صحيحة",
+          options: ["صحيحة", "خاطئة"],
+          points: 5,
+        },
+        {
+          question:
+            'هل العبارة التالية صحيحة أم خاطئة: "جمع الرب يسوع تلاميذه لتناول الفصح يوم سبت النور."؟',
+          correctAnswer: "خاطئة",
+          options: ["صحيحة", "خاطئة"],
+          points: 5,
+        },
+        {
+          question:
+            'هل العبارة التالية صحيحة أم خاطئة: "أقام الرب يسوع لعازر بعد خمسة أيام من موته."؟',
+          correctAnswer: "خاطئة",
+          options: ["صحيحة", "خاطئة"],
+          points: 5,
+        },
+        {
+          question:
+            'هل العبارة التالية صحيحة أم خاطئة: "بدون دم لا تحصل مغفرة."؟',
+          correctAnswer: "صحيحة",
+          options: ["صحيحة", "خاطئة"],
+          points: 5,
+        },
+        {
+          question:
+            'هل العبارة التالية صحيحة أم خاطئة: "آمنت السامرية بكلام الرب يسوع وأعترفت بخطاياها."؟',
+          correctAnswer: "صحيحة",
+          options: ["صحيحة", "خاطئة"],
+          points: 5,
+        },
+        {
+          question:
+            'هل العبارة التالية صحيحة أم خاطئة: "علم الأنبا هيدرا شعبه الايمان الصحيح وأهتم بالفقراء."؟',
+          correctAnswer: "صحيحة",
+          options: ["صحيحة", "خاطئة"],
+          points: 5,
+        },
+        {
+          question:
+            'هل العبارة التالية صحيحة أم خاطئة: "كرز القديس يوحنا فى مدينة أفسس وبلاد كثيرة."؟',
+          correctAnswer: "صحيحة",
+          options: ["صحيحة", "خاطئة"],
+          points: 5,
+        },
+        {
+          question:
+            'هل العبارة التالية صحيحة أم خاطئة: "لقب يوحنا بعدة القاب منها الرسولي والانجيلي والرائي."؟',
+          correctAnswer: "صحيحة",
+          options: ["صحيحة", "خاطئة"],
+          points: 5,
+        },
+        {
+          question:
+            'هل العبارة التالية صحيحة أم خاطئة: "الانبا بيجول رئيس الدير الأخضر وهو خال الانبا شنودة."؟',
+          correctAnswer: "خاطئة",
+          options: ["صحيحة", "خاطئة"],
+          points: 5,
+        },
+        {
+          question:
+            'هل العبارة التالية صحيحة أم خاطئة: "وافق فرعون على خروج شعب الله بعد الضربة السابعة."؟',
+          correctAnswer: "خاطئة",
+          options: ["صحيحة", "خاطئة"],
+          points: 5,
+        },
+        {
+          question: 'هل العبارة التالية صحيحة أم خاطئة: "المحبة تظن السوء."؟',
+          correctAnswer: "خاطئة",
+          options: ["صحيحة", "خاطئة"],
+          points: 5,
+        },
+        {
+          question:
+            'هل العبارة التالية صحيحة أم خاطئة: "أنشأ الانبا شنودة أربعة مدارس بالدير."؟',
+          correctAnswer: "خاطئة",
+          options: ["صحيحة", "خاطئة"],
+          points: 5,
+        },
+        {
+          question:
+            'هل العبارة التالية صحيحة أم خاطئة: "هيدرا يحب الله ويسأله قبل أن يفعل أى أمر."؟',
+          correctAnswer: "صحيحة",
+          options: ["صحيحة", "خاطئة"],
+          points: 5,
+        },
+        {
+          question:
+            'هل العبارة التالية صحيحة أم خاطئة: "ولد الأنبا هيدرا في القرن الرابع الميلادي."؟',
+          correctAnswer: "صحيحة",
+          options: ["صحيحة", "خاطئة"],
+          points: 5,
+        },
+        {
+          question:
+            'هل العبارة التالية صحيحة أم خاطئة: "إهتم الانبا شنودة بالتعليم واللغة القبطية."؟',
+          correctAnswer: "صحيحة",
+          options: ["صحيحة", "خاطئة"],
+          points: 5,
+        },
+        {
+          question:
+            'هل العبارة التالية صحيحة أم خاطئة: "سبب مرض المولود أعمى هو خطأ أبواه."؟',
+          correctAnswer: "خاطئة",
+          options: ["صحيحة", "خاطئة"],
+          points: 5,
+        },
+        {
+          question:
+            'هل العبارة التالية صحيحة أم خاطئة: "طلب الرب يسوع من المولود أعمى أن يذهب ويغتسل في بركة سلوام."؟',
+          correctAnswer: "صحيحة",
+          options: ["صحيحة", "خاطئة"],
+          points: 5,
+        },
+        {
+          question:
+            'هل العبارة التالية صحيحة أم خاطئة: "فتح الرب يسوع عينى المولود أعمى وهى معجزة لم تحدث من قبل."؟',
+          correctAnswer: "صحيحة",
+          options: ["صحيحة", "خاطئة"],
+          points: 5,
+        },
+        {
+          question:
+            'هل العبارة التالية صحيحة أم خاطئة: "أعطى الرب يسوع إسم آخر لسمعان وهو بطرس."؟',
+          correctAnswer: "صحيحة",
+          options: ["صحيحة", "خاطئة"],
+          points: 5,
+        },
+        {
+          question:
+            'هل العبارة التالية صحيحة أم خاطئة: "قال يوحنا: على كلمتك ألقي الشبكة."؟',
+          correctAnswer: "خاطئة",
+          options: ["صحيحة", "خاطئة"],
+          points: 5,
+        },
+        {
+          question:
+            'هل العبارة التالية صحيحة أم خاطئة: "قال الرب يسوع لبطرس: من الآن تصطاد الناس."؟',
+          correctAnswer: "صحيحة",
+          options: ["صحيحة", "خاطئة"],
+          points: 5,
+        },
+        {
+          question:
+            'هل العبارة التالية صحيحة أم خاطئة: "إن أردت أن تكون كاملاً فاعط كل أموالك للفقراء."؟',
+          correctAnswer: "صحيحة",
+          options: ["صحيحة", "خاطئة"],
+          points: 5,
+        },
+        {
+          question: 'من القائل: "على كلمتك ألقي الشبكة"؟',
+          correctAnswer: "بطرس",
+          options: ["يوحنا", "بطرس", "أندراوس", "الرب يسوع"],
+          points: 5,
+        },
+        {
+          question: 'لمن قيلت عبارة: "على كلمتك ألقي الشبكة"؟',
+          correctAnswer: "للرب يسوع",
+          options: ["للجموع", "للرب يسوع", "ليوحنا", "لزملاء بطرس الصيادين"],
+          points: 5,
+        },
+        {
+          question: 'من القائل: "أخرج من سفينتي لأنى رجل خاطىء"؟',
+          correctAnswer: "بطرس",
+          options: ["متى العشار", "بطرس", "زكا العشار", "بولس الرسول"],
+          points: 5,
+        },
+        {
+          question: 'لمن قيلت عبارة: "أخرج من سفينتي لأنى رجل خاطىء"؟',
+          correctAnswer: "للرب يسوع",
+          options: ["ليوحنا المعمدان", "للرب يسوع", "لأحد الكهنة", "لبيلاطس"],
+          points: 5,
+        },
+        {
+          question: 'من القائل: "إذهب واغتسل في بركة سلوام"؟',
+          correctAnswer: "الرب يسوع",
+          options: [
+            "الملاك جبرائيل",
+            "الرب يسوع",
+            "يوحنا المعمدان",
+            "أحد التلاميذ",
+          ],
+          points: 5,
+        },
+        {
+          question: 'لمن قيلت عبارة: "إذهب واغتسل في بركة سلوام"؟',
+          correctAnswer: "للمولود أعمى",
+          options: [
+            "للمرأة السامرية",
+            "للمولود أعمى",
+            "لبطرس الرسول",
+            "للعازر",
+          ],
+          points: 5,
+        },
+        {
+          question: 'من القائل: "يا معلم من أخطأ هذا أم أبواه؟"',
+          correctAnswer: "التلاميذ",
+          options: ["الفريسيون", "التلاميذ", "أهل المولود أعمى", "الكتبة"],
+          points: 5,
+        },
+        {
+          question: 'لمن قيلت عبارة: "يا معلم من أخطأ هذا أم أبواه؟"',
+          correctAnswer: "للرب يسوع",
+          options: ["ليوحنا المعمدان", "للرب يسوع", "لرئيس المجمع", "لبيلاطس"],
+          points: 5,
+        },
+        {
+          question: 'من القائل: "أنا لا أستطيع الجرى، إرحم شيخوختي وسني"؟',
+          correctAnswer: "يوحنا الحبيب",
+          options: [
+            "زكريا الكاهن",
+            "يوحنا الحبيب",
+            "سمعان الشيخ",
+            "بطرس الرسول",
+          ],
+          points: 5,
+        },
+        {
+          question: 'لمن قيلت عبارة: "أنا لا أستطيع الجرى، إرحم شيخوختي وسني"؟',
+          correctAnswer: "للشاب الذي كان تلميذه",
+          options: [
+            "للرب يسوع",
+            "للشاب الذي كان تلميذه",
+            "لأحد الجنود الرومان",
+            "لتلميذ آخر",
+          ],
+          points: 5,
+        },
+        {
+          question: 'من القائل: "كيف تطلب مني لتشرب وأنت يهودى وأنا سامرية؟"',
+          correctAnswer: "السامرية",
+          options: [
+            "مريم المجدلية",
+            "السامرية",
+            "مرثا أخت لعازر",
+            "حنة النبية",
+          ],
+          points: 5,
+        },
+        {
+          question:
+            'لمن قيلت عبارة: "كيف تطلب مني لتشرب وأنت يهودى وأنا سامرية؟"',
+          correctAnswer: "للرب يسوع",
+          options: [
+            "لبطرس الرسول",
+            "للرب يسوع",
+            "ليوحنا الحبيب",
+            "لأحد المارة",
+          ],
+          points: 5,
+        },
+        {
+          question:
+            'من القائل: "فرعون قاسي لا يريد أن يخرج شعبي، ها أنا ذا أضرب كل بكر"؟',
+          correctAnswer: "الله",
+          options: ["موسى", "الله", "هارون", "أحد أنبياء بني إسرائيل"],
+          points: 5,
+        },
+        {
+          question:
+            'لمن قيلت عبارة: "فرعون قاسي لا يريد أن يخرج شعبي، ها أنا ذا أضرب كل بكر"؟',
+          correctAnswer: "لموسى",
+          options: ["لفرعون", "لموسى", "لشعب إسرائيل", "لهارون"],
+          points: 5,
+        },
+        {
+          question: 'من القائل: "يا سيد لو كنت ههنا لم يمت أخي"؟',
+          correctAnswer: "مريم أو مرثا (أخت لعازر)",
+          options: [
+            "مريم المجدلية",
+            "مريم أو مرثا (أخت لعازر)",
+            "السامرية",
+            "أم يوحنا ويعقوب",
+          ],
+          points: 5,
+        },
+        {
+          question: 'لمن قيلت عبارة: "يا سيد لو كنت ههنا لم يمت أخي"؟',
+          correctAnswer: "للرب يسوع",
+          options: ["لبطرس", "للرب يسوع", "ليوحنا", "لأحد الكهنة"],
+          points: 5,
+        },
+        {
+          question:
+            'من القائل: "أيها المعلم الصالح ماذا أعمل لتكون لى الحياة الأبدية؟"',
+          correctAnswer: "الشاب الغني",
+          options: ["نيقوديموس", "الشاب الغني", "زكا العشار", "قائد المئة"],
+          points: 5,
+        },
+        {
+          question:
+            'لمن قيلت عبارة: "أيها المعلم الصالح ماذا أعمل لتكون لى الحياة الأبدية؟"',
+          correctAnswer: "للرب يسوع",
+          options: ["ليوحنا المعمدان", "للرب يسوع", "لأحد الرسل", "لغمالائيل"],
+          points: 5,
+        },
+        {
+          question: 'من القائل: "أذكرنى يا رب متى جئت فى ملكوتك"؟',
+          correctAnswer: "اللص اليمين",
+          options: [
+            "اللص اليسار",
+            "اللص اليمين",
+            "بيلاطس البنطي",
+            "قائد المئة عند الصليب",
+          ],
+          points: 5,
+        },
+        {
+          question: 'لمن قيلت عبارة: "أذكرنى يا رب متى جئت فى ملكوتك"؟',
+          correctAnswer: "للرب يسوع",
+          options: ["لله الآب", "للرب يسوع", "للروح القدس", "لأحد الملائكة"],
+          points: 5,
+        },
+        {
+          question: 'من القائل: "اليوم تكون معى فى الفردوس"؟',
+          correctAnswer: "الرب يسوع",
+          options: ["الملاك ميخائيل", "الرب يسوع", "موسى النبي", "إيليا النبي"],
+          points: 5,
+        },
+        {
+          question: 'لمن قيلت عبارة: "اليوم تكون معى فى الفردوس"؟',
+          correctAnswer: "للص اليمين",
+          options: ["لبطرس", "ليوحنا الحبيب", "للص اليمين", "لمريم المجدلية"],
+          points: 5,
+        },
+        {
+          question:
+            'من القائل: "يا أبتاه إغفر لهم لأنهم لا يعلمون ماذا يفعلون"؟',
+          correctAnswer: "الرب يسوع على الصليب",
+          options: [
+            "استفانوس وهو يُرجم",
+            "الرب يسوع على الصليب",
+            "بطرس بعد إنكاره",
+            "بولس في السجن",
+          ],
+          points: 5,
+        },
+        {
+          question:
+            'لمن قيلت عبارة: "يا أبتاه إغفر لهم لأنهم لا يعلمون ماذا يفعلون"؟',
+          correctAnswer: "للآب السماوي",
+          options: [
+            "للجنود الرومان",
+            "للآب السماوي",
+            "للجموع الواقفة",
+            "لرؤساء الكهنة",
+          ],
+          points: 5,
+        },
+        {
+          question: 'أكمل الآية: "سراج لرجلي .......... ونور لـ .......... ."',
+          correctAnswer: "كلامك - طريقي",
+          options: [
+            "كلامك - طريقي",
+            "كلامك - سبيلي",
+            "نورك - حياتي",
+            "حقك - دربي",
+          ],
+          points: 5,
+        },
+        {
+          question: 'أكمل الآية: "المحبة لا .......... ابداً."',
+          correctAnswer: "تسقط",
+          options: ["تفشل", "تسقط", "تتألم", "تيأس"],
+          points: 5,
+        },
+        {
+          question:
+            'أكمل الآية: "من يأكل .......... ويشرب .......... فله حياة أبدية."',
+          correctAnswer: "جسدي - دمي",
+          options: [
+            "خبزي - مائي",
+            "جسدي - دمي",
+            "المن - الماء",
+            "الفصح - الخمر",
+          ],
+          points: 5,
+        },
+        {
+          question:
+            'أكمل القول: "الجواب .......... يصرف الغضب والكلام الموجع يهيج السخط."',
+          correctAnswer: "اللين",
+          options: ["القوي", "اللين", "الحكيم", "الصادق"],
+          points: 5,
+        },
+        {
+          question:
+            'أكمل الآية: "هذه هي .......... أن تحبوا .......... كما أحببتكم."',
+          correctAnswer: "وصيتي - بعضكم بعضاً",
+          options: [
+            "شريعتي - بعضكم بعضاً",
+            "وصيتي - بعضكم بعضاً",
+            "مشيئتي - القريب",
+            "كلمتي - الجميع",
+          ],
+          points: 5,
+        },
+        {
+          question: 'أكمل القول: "كونوا .......... بعضكم نحو بعض."',
+          correctAnswer: "لطفاء",
+          options: ["أقوياء", "لطفاء", "صادقين", "أمناء"],
+          points: 5,
+        },
+        {
+          question:
+            'أكمل الوصية: "تحب .......... إلهك من كل .......... وكل نفسك."',
+          correctAnswer: "الرب - قلبك",
+          options: [
+            "الرب - قلبك",
+            "السيد - فكرك",
+            "الخالق - قوتك",
+            "الله - إرادتك",
+          ],
+          points: 5,
+        },
+        {
+          question:
+            'أكمل الآية: "إن كنت أتكلم بألسنة الناس و.......... ولكن ليس لى .......... فقد صرت نحاساً يطن أو صنجاً يرن."',
+          correctAnswer: "الملائكة - محبة",
+          options: [
+            "الحكماء - إيمان",
+            "الملائكة - محبة",
+            "الأنبياء - رجاء",
+            "القديسين - صبر",
+          ],
+          points: 5,
+        },
+        {
+          question:
+            'أكمل الآية: "المحبة لا تظن .......... ولا تفرح بـ .......... بل تفرح بـ .......... وتحتمل كل شيء."',
+          correctAnswer: "السوء - الإثم - الحق",
+          options: [
+            "الخير - الشر - العدل",
+            "السوء - الإثم - الحق",
+            "الضعف - القوة - النصر",
+            "الشر - الظلم - السلام",
+          ],
+          points: 5,
+        },
+        {
+          question: 'أكمل القول المأثور لبطرس: "على كلمتك ألقي .......... ."',
+          correctAnswer: "الشبكة",
+          options: ["المرساة", "الشبكة", "نظري", "ثقتي"],
+          points: 5,
+        },
+        {
+          question:
+            'أكمل الآية: "أنا هو القيامة و..........، من آمن بي ولو .......... فسيحيا."',
+          correctAnswer: "الحياة - مات",
+          options: [
+            "النور - ضعف",
+            "الطريق - تعب",
+            "الحياة - مات",
+            "الحق - заблудился (ضل)",
+          ],
+          points: 5,
+        },
+        {
+          question:
+            'أكمل صلاة السيد المسيح: "يا أبتاه .......... لهم لأنهم لا يعلمون ماذا يفعلون."',
+          correctAnswer: "إغفر",
+          options: ["سامح", "إغفر", "ارحم", "بارك"],
+          points: 5,
+        },
+        {
+          question:
+            'أكمل طلب اللص اليمين: "أذكرنى يارب متى جئت في .......... ."',
+          correctAnswer: "ملكوتك",
+          options: ["مجدك", "ملكوتك", "قوتك", "رحمتك"],
+          points: 5,
+        },
+        {
+          question:
+            'أكمل قول الرب يسوع للشاب الغني: "إن أردت أن تكون .......... فإذهب وبع أملاكك واعط لـ .......... فيكون لك كنز فى السماء وتعال اتبعنى."',
+          correctAnswer: "كاملاً - الفقراء",
+          options: [
+            "عظيماً - الهيكل",
+            "كاملاً - الفقراء",
+            "قديساً - التلاميذ",
+            "باراً - المحتاجين",
+          ],
+          points: 5,
+        },
+        {
+          question:
+            'أكمل الوصية: "أكرم أباك و.......... لكي تطول أيامك على الأرض."',
+          correctAnswer: "أمك",
+          options: ["أمك", "معلمك", "قريبك", "كاهنك"],
+          points: 5,
+        },
+        {
+          question: 'أكمل الوصية: "أذكر يوم .......... لتقدسه."',
+          correctAnswer: "السبت",
+          options: ["الرب", "السبت", "الفصح", "الميلاد"],
+          points: 5,
+        },
+        {
+          question: 'أكمل الوصية: "لا تشهد على قريبك شهادة .......... ."',
+          correctAnswer: "زور",
+          options: ["زور", "كذب", "باطل", "نفاق"],
+          points: 5,
+        },
+        {
+          question: 'أكمل اللقب: "الأنبا أنطونيوس أبو .......... ."',
+          correctAnswer: "الرهبان",
+          options: ["الأساقفة", "الرهبان", "الشهداء", "المتوحدين"],
+          points: 5,
+        },
+        {
+          question: 'من هو القديس الذي لقب بـ "كوكب البرية وأبو الرهبان"؟',
+          correctAnswer: "الأنبا أنطونيوس",
+          options: [
+            "الأنبا بولا",
+            "الأنبا أنطونيوس",
+            "الأنبا باخوميوس",
+            "الأنبا مقار",
+          ],
+          points: 5,
+        },
+        {
+          question: "من هو الذي أقامه الرب يسوع من الموت بعد أربعة أيام؟",
+          correctAnswer: "لعازر",
+          options: ["ابن أرملة نايين", "ابنة يايرس", "لعازر", "طابيثا"],
+          points: 5,
+        },
+        {
+          question: 'لمن قال السيد المسيح: "إذهب اغتسل فى بركة سلوام"؟',
+          correctAnswer: "المولود أعمى",
+          options: ["الأبرص", "المولود أعمى", "المفلوج", "المرأة نازفة الدم"],
+          points: 5,
+        },
+        {
+          question: 'من الذي قال للرب يسوع: "أذكرنى يا رب متى جئت في ملكوتك"؟',
+          correctAnswer: "اللص اليمين",
+          options: ["بطرس الرسول", "اللص اليمين", "يوحنا الحبيب", "قائد المئة"],
+          points: 5,
+        },
+        {
+          question: "من هو الذي أنكر السيد المسيح ثلاث مرات ثم ندم وتاب؟",
+          correctAnswer: "بطرس الرسول",
+          options: [
+            "يهوذا الإسخريوطي",
+            "بطرس الرسول",
+            "توما الرسول",
+            "أحد الجنود",
+          ],
+          points: 5,
+        },
+        {
+          question: 'لمن قال الرب يسوع: "اليوم تكون معى فى الفردوس"؟',
+          correctAnswer: "للص اليمين",
+          options: [
+            "لمريم المجدلية",
+            "للص اليمين",
+            "ليوحنا الحبيب",
+            "لأمه العذراء",
+          ],
+          points: 5,
+        },
+        {
+          question: "من الذي أصدر أمراً بصلب الرب يسوع؟",
+          correctAnswer: "بيلاطس البنطي",
+          options: [
+            "هيرودس أنتيباس",
+            "بيلاطس البنطي",
+            "قيافا رئيس الكهنة",
+            "أغسطس قيصر",
+          ],
+          points: 5,
+        },
+        {
+          question: 'لمن قال الرب يسوع: "من الأن تكون تصطاد الناس"؟',
+          correctAnswer: "بطرس",
+          options: ["أندراوس", "بطرس", "يعقوب", "يوحنا"],
+          points: 5,
+        },
+        {
+          question:
+            'من هو القديس الذي لقب بـ "إناء مختار لله ورئيس المتوحدين"؟',
+          correctAnswer: "الأنبا شنودة",
+          options: [
+            "الأنبا أنطونيوس",
+            "الأنبا شنودة",
+            "الأنبا باخوميوس",
+            "الأنبا مكاريوس",
+          ],
+          points: 5,
+        },
+        {
+          question:
+            'من الذي قال للرب يسوع: "ماذا أفعل لتكون لى الحياة الابدية"؟',
+          correctAnswer: "الشاب الغني",
+          options: ["نيقوديموس", "الشاب الغني", "زكا العشار", "معلم الناموس"],
+          points: 5,
+        },
+        {
+          question: "من هما التلميذان اللذان أرسلهما الرب يسوع ليعدوا الفصح؟",
+          correctAnswer: "بطرس ويوحنا",
+          options: [
+            "يعقوب ويوحنا",
+            "بطرس ويوحنا",
+            "أندراوس وفيلبس",
+            "توما ومتى",
+          ],
+          points: 5,
+        },
+        {
+          question: "أين علم الرب يسوع تلاميذه سر التناول يوم خميس العهد؟",
+          correctAnswer: "في بيت مار مرقس (علية صهيون)",
+          options: [
+            "في الهيكل",
+            "في بيت مار مرقس (علية صهيون)",
+            "في بيت عنيا",
+            "على جبل الزيتون",
+          ],
+          points: 5,
+        },
+        {
+          question:
+            "من هو الرسول الذي كان يسافر بلاداً كثيرة بعد حلول الروح القدس ليكرز بالانجيل؟",
+          correctAnswer: "يوحنا الحبيب",
+          options: [
+            "بطرس الرسول",
+            "يوحنا الحبيب",
+            "بولس الرسول",
+            "يعقوب أخو الرب",
+          ],
+          points: 5,
+        },
+        {
+          question: 'من الذي قال للرب يسوع: "أخرج من سفينتي لاني رجل خاطئ"؟',
+          correctAnswer: "بطرس الرسول",
+          options: ["متى العشار", "بطرس الرسول", "زكا", "أندراوس"],
+          points: 5,
+        },
+        {
+          question:
+            "من هو القديس الذي أعطاه الله موهبتي شفاء الامراض وإخراج الشياطين، وولد في أسوان؟",
+          correctAnswer: "الأنبا هيدرا",
+          options: [
+            "الأنبا بيشوي",
+            "الأنبا هيدرا",
+            "الأنبا صموئيل المعترف",
+            "الأنبا موسى الأسود",
+          ],
+          points: 5,
+        },
+        {
+          question: "العلية هي بيت...",
+          correctAnswer: "مار مرقس",
+          options: ["سمعان الفريسي", "مار مرقس", "لعازر", "يوسف الرامي"],
+          points: 5,
+        },
+        {
+          question: "من رموز الصليب في العهد القديم...",
+          correctAnswer: "الحية النحاسية وخروف الفصح",
+          options: [
+            "المن والسلوى",
+            "الحية النحاسية وخروف الفصح",
+            "تابوت العهد وعصا هارون",
+            "مذبح المحرقة والبخور",
+          ],
+          points: 5,
+        },
+        {
+          question: "ماذا قيل عن الأنبا شنودة؟",
+          correctAnswer: "إنه إناء مختار لله",
+          options: [
+            "إنه كوكب البرية",
+            "إنه إناء مختار لله",
+            "إنه رسول المحبة",
+            "إنه أبو الرهبان",
+          ],
+          points: 5,
+        },
+        {
+          question: "أين تقابل الرب مع السامرية؟",
+          correctAnswer: "عند بئر يعقوب",
+          options: [
+            "عند بركة بيت حسدا",
+            "عند بئر يعقوب",
+            "عند نهر الأردن",
+            "عند بحر طبرية",
+          ],
+          points: 5,
+        },
+        {
+          question: "ماذا أنشأ الأنبا شنودة بالدير؟",
+          correctAnswer: "مدرستين",
+          options: ["مستشفى كبير", "مدرستين", "مكتبة ضخمة", "ثلاث كنائس"],
+          points: 5,
+        },
+        {
+          question: "أكمل: المحبة لا .......... أبداً.",
+          correctAnswer: "تسقط",
+          options: ["تتألم", "تسقط", "تخاف", "تضعف"],
+          points: 5,
+        },
+        {
+          question: 'أكمل: "هذه هي وصيتى أن تحبوا..."',
+          correctAnswer: "بعضكم بعضا",
+          options: ["أعداءكم", "بعضكم بعضا", "الفقراء", "الله فقط"],
+          points: 5,
+        },
+        {
+          question: "من هو التلميذ الذي كان يتكئ على صدر الرب يسوع؟",
+          correctAnswer: "يوحنا الحبيب",
+          options: ["بطرس", "يوحنا الحبيب", "يعقوب", "أندراوس"],
+          points: 5,
+        },
+        {
+          question: "الجواب اللين...",
+          correctAnswer: "يصرف الغضب",
+          options: ["يزيد الحكمة", "يصرف الغضب", "يجلب السلام", "يظهر المحبة"],
+          points: 5,
+        },
+        {
+          question: "يوجد دير الأنبا شنودة بمحافظة...",
+          correctAnswer: "سوهاج",
+          options: ["أسيوط", "سوهاج", "قنا", "المنيا"],
+          points: 5,
+        },
+        {
+          question: "الأنبا هيدرا كان أسقف مدينة...",
+          correctAnswer: "أسوان",
+          options: ["الأقصر", "أسوان", "الإسكندرية", "الفيوم"],
+          points: 5,
+        },
+        {
+          question: "كيف أمر الرب أن يؤكل لحم خروف الفصح؟",
+          correctAnswer: "مشوياً",
+          options: ["نيئاً", "مشوياً", "مسلوقاً", "مع خبز مختمر"],
+          points: 5,
+        },
+        {
+          question:
+            "مع من تقابل القديس يوحنا الحبيب في مدينة أفسس وأصبح الشاب تلميذاً له؟",
+          correctAnswer: "مع شاب كان لصاً ثم تاب",
+          options: [
+            "مع قائد مئة روماني",
+            "مع شاب كان لصاً ثم تاب",
+            "مع فيلسوف يوناني",
+            "(الإجابة المباشرة غير متوفرة كخيار واضح، لكنه تقابل مع شاب)",
+          ],
+          points: 5,
+        },
+        {
+          question: "متى أخرج فرعون شعب بني إسرائيل من مصر؟",
+          correctAnswer: "بعد ضربة الأبكار",
+          options: [
+            "بعد ضربة الدم",
+            "بعد ضربة الظلام",
+            "بعد ضربة الأبكار",
+            "بعد ضربة الجراد",
+          ],
+          points: 5,
+        },
+        {
+          question: "من هما التلميذان اللذان أرسلهما الرب يسوع ليعدا الفصح؟",
+          correctAnswer: "بطرس ويوحنا",
+          options: [
+            "يعقوب ويوحنا",
+            "بطرس ويوحنا",
+            "أندراوس وفيلبس",
+            "توما وبرثولماوس",
+          ],
+          points: 5,
+        },
+        {
+          question:
+            "من هو الرسول الذي سافر لأماكن كثيرة ليكرز بالإنجيل بعد حلول الروح القدس؟",
+          correctAnswer: "يوحنا الحبيب",
+          options: ["متى", "يوحنا الحبيب", "توما", "سمعان القانوي"],
+          points: 5,
+        },
+        {
+          question:
+            "من هو الذي أقامه الرب يسوع من الموت بعد أربعة أيام في القبر؟",
+          correctAnswer: "لعازر",
+          options: ["ابن أرملة نايين", "لعازر", "ابنة يايرس", "طابيثا"],
+          points: 5,
+        },
+        {
+          question: "بماذا يوصف السيد المسيح بشكل أساسي في سياق آلامه؟",
+          correctAnswer: "صُلب على جبل الجلجثة",
+          options: [
+            "خان تلاميذه",
+            "صُلب على جبل الجلجثة",
+            "كان يتكئ على صدر يوحنا",
+            "ندم وتاب",
+          ],
+          points: 5,
+        },
+        {
+          question: "بماذا يُعرف الأنبا أنطونيوس؟",
+          correctAnswer: "أبو الرهبان وكوكب البرية",
+          options: [
+            "خان السيد المسيح",
+            "أبو الرهبان وكوكب البرية",
+            "صُلب على جبل الجلجثة",
+            "ندم وتاب على إنكاره المسيح",
+          ],
+          points: 5,
+        },
+        {
+          question: "ما هي العلاقة المميزة ليوحنا الحبيب بالسيد المسيح؟",
+          correctAnswer: "كان يتكئ على صدر يسوع",
+          options: [
+            "خان السيد المسيح",
+            "أبو الرهبان",
+            "كان يتكئ على صدر يسوع",
+            "صُلب على جبل الجلجثة",
+          ],
+          points: 5,
+        },
+        {
+          question: "ماذا فعل بطرس الرسول بعد إنكاره للسيد المسيح؟",
+          correctAnswer: "ندم وتاب على إنكاره المسيح",
+          options: [
+            "خان السيد المسيح وسلمه",
+            "أصبح أبو الرهبان",
+            "ندم وتاب على إنكاره المسيح",
+            "صُلب على جبل الجلجثة",
+          ],
+          points: 5,
+        },
+        {
+          question: "ماذا فعل يهوذا الإسخريوطي؟",
+          correctAnswer: "خان السيد المسيح وسلمه",
+          options: [
+            "صُلب على جبل الجلجثة",
+            "خان السيد المسيح وسلمه",
+            "أبو الرهبان وكوكب البرية",
+            "ندم وتاب على إنكاره المسيح",
+          ],
+          points: 5,
+        },
+      ];
+      // Global variables
+      let boysTeamName = "فريق الأولاد";
+      let girlsTeamName = "فريق البنات";
+      let boyspoints = 0;
+      let girlspoints = 0;
+      let currentQuestion = 0;
+      let selectedOption = null;
+      let currentTeam = "boys"; // "boys" or "girls"
+      let confettiElements = [];
+
+      // DOM Elements
+      // Start Screen
+      const startScreen = document.getElementById("start-screen");
+      const boysTeamNameInput = document.getElementById("boys-team-name");
+      const girlsTeamNameInput = document.getElementById("girls-team-name");
+      const boyspointsDisplay = document.getElementById("boys-points");
+      const girlspointsDisplay = document.getElementById("girls-points");
+      const startBtn = document.getElementById("start-btn");
+
+      // Question Screen
+      const questionScreen = document.getElementById("question-screen");
+      const questionBoysTeam = document.getElementById("question-boys-team");
+      const questionBoyspoints = document.getElementById(
+        "question-boys-points"
+      );
+      const questionGirlsTeam = document.getElementById("question-girls-team");
+      const questionGirlspoints = document.getElementById(
+        "question-girls-points"
+      );
+      const currentQuestionNum = document.getElementById("current-question");
+      const totalQuestionsNum = document.getElementById("total-questions");
+      const currentTeamName = document.getElementById("current-team-name");
+      const questionNumber = document.getElementById("question-number");
+      const questionText = document.getElementById("question-text");
+      const optionsContainer = document.getElementById("options-container");
+      const confirmBtn = document.getElementById("confirm-btn");
+
+      // Feedback Screen
+      const feedbackScreen = document.getElementById("feedback-screen");
+      const feedbackBoysTeam = document.getElementById("feedback-boys-team");
+      const feedbackBoyspoints = document.getElementById(
+        "feedback-boys-points"
+      );
+      const feedbackGirlsTeam = document.getElementById("feedback-girls-team");
+      const feedbackGirlspoints = document.getElementById(
+        "feedback-girls-points"
+      );
+      const feedbackResult = document.getElementById("feedback-result");
+      const correctAnswerContainer = document.getElementById(
+        "correct-answer-container"
+      );
+      const correctAnswerText = document.getElementById("correct-answer-text");
+      const nextBtn = document.getElementById("next-btn");
+
+      // End Screen
+      const endScreen = document.getElementById("end-screen");
+      const confettiContainer = document.getElementById("confetti-container");
+      const endBoysTeam = document.getElementById("end-boys-team");
+      const endBoyspoints = document.getElementById("end-boys-points");
+      const endGirlsTeam = document.getElementById("end-girls-team");
+      const endGirlspoints = document.getElementById("end-girls-points");
+      const winnerTeam = document.getElementById("winner-team");
+      const restartBtn = document.getElementById("restart-btn");
+
+      // Sound effects
+      const correctSound = new Audio(
+        "data:audio/mp3;base64,SUQzAwAAAAAAJlRQRTEAAAAcAAAAU291bmRKYXkuY29tIFNvdW5kIEVmZmVjdHMAAA=="
+      );
+      const incorrectSound = new Audio(
+        "data:audio/mp3;base64,SUQzAwAAAAAAJlRQRTEAAAAcAAAAU291bmRKYXkuY29tIFNvdW5kIEVmZmVjdHMAAA=="
+      );
+      const winnerSound = new Audio(
+        "data:audio/mp3;base64,SUQzAwAAAAAAJlRQRTEAAAAcAAAAU291bmRKYXkuY29tIFNvdW5kIEVmZmVjdHMAAA=="
+      );
+
+      // Initialize the application
+      function init() {
+        // Set event listeners
+        startBtn.addEventListener("click", startQuiz);
+        confirmBtn.addEventListener("click", checkAnswer);
+        nextBtn.addEventListener("click", nextQuestion);
+        restartBtn.addEventListener("click", restartQuiz);
+
+        // Display total number of questions
+        totalQuestionsNum.textContent = quizQuestions.length;
+
+        // Add animation to start screen
+        addEntryAnimation(startScreen);
+      }
+
+      // Add entry animation to an element
+      function addEntryAnimation(element) {
+        setTimeout(() => {
+          element.style.opacity = "1";
+          element.style.transform = "translateY(0)";
+        }, 100);
+      }
+
+      // Create confetti elements
+      function createConfetti() {
+        confettiContainer.innerHTML = "";
+        confettiElements = [];
+
+        for (let i = 0; i < 100; i++) {
+          const confetti = document.createElement("div");
+          confetti.classList.add("confetti");
+          confetti.style.left = Math.random() * 100 + "%";
+          confetti.style.animationDelay = Math.random() * 3 + "s";
+          confetti.style.animationDuration = Math.random() * 2 + 2 + "s";
+          confettiContainer.appendChild(confetti);
+          confettiElements.push(confetti);
+        }
+      }
+
+      // Start the quiz
+      function startQuiz() {
+        // Get team names from inputs
+        if (boysTeamNameInput.value.trim() !== "") {
+          boysTeamName = boysTeamNameInput.value;
+        }
+
+        if (girlsTeamNameInput.value.trim() !== "") {
+          girlsTeamName = girlsTeamNameInput.value;
+        }
+
+        // Set team names throughout the application
+        questionBoysTeam.textContent = boysTeamName + ":";
+        questionGirlsTeam.textContent = girlsTeamName + ":";
+        feedbackBoysTeam.textContent = boysTeamName + ":";
+        feedbackGirlsTeam.textContent = girlsTeamName + ":";
+        endBoysTeam.textContent = boysTeamName + ":";
+        endGirlsTeam.textContent = girlsTeamName + ":";
+
+        // Set current team name
+        currentTeamName.textContent = boysTeamName;
+
+        // Hide start screen, show question screen
+        startScreen.classList.remove("active");
+        questionScreen.classList.add("active");
+
+        // Display first question
+        displayQuestion();
+      }
+
+      // Display the current question
+      function displayQuestion() {
+        // Reset selected option
+        selectedOption = null;
+        confirmBtn.disabled = true;
+
+        // Display current question number
+        currentQuestionNum.textContent = currentQuestion + 1;
+        questionNumber.textContent = `السؤال رقم ${convertToArabicNumbers(
+          currentQuestion + 1
+        )}`;
+
+        // Display the question
+        const question = quizQuestions[currentQuestion];
+        questionText.textContent = question.question;
+
+        // Create the options
+        optionsContainer.innerHTML = "";
+        question.options.forEach((option, index) => {
+          const optionElement = document.createElement("div");
+          optionElement.classList.add("option");
+          optionElement.textContent = option;
+          optionElement.dataset.index = index;
+
+          // Add a slight delay to each option for a staggered appearance
+          optionElement.style.opacity = "0";
+          optionElement.style.transform = "translateY(20px)";
+
+          setTimeout(() => {
+            optionElement.style.opacity = "1";
+            optionElement.style.transform = "translateY(0)";
+          }, 100 * (index + 1));
+
+          optionElement.addEventListener("click", () => {
+            // Remove selected class from all options
+            document.querySelectorAll(".option").forEach((opt) => {
+              opt.classList.remove("selected");
+            });
+
+            // Add selected class to clicked option
+            optionElement.classList.add("selected");
+
+            // Update selected option
+            selectedOption = option;
+
+            // Enable confirm button
+            confirmBtn.disabled = false;
+          });
+
+          optionsContainer.appendChild(optionElement);
+        });
+
+        // Add entry animation for options container
+        optionsContainer.style.opacity = "0";
+        setTimeout(() => {
+          optionsContainer.style.opacity = "1";
+        }, 300);
+      }
+
+      // Check if the answer is correct
+      function checkAnswer() {
+        const question = quizQuestions[currentQuestion];
+        const isCorrect = selectedOption === question.correctAnswer;
+
+        // Update pointss
+        if (isCorrect) {
+          if (currentTeam === "boys") {
+            boyspoints += question.points;
+            questionBoyspoints.textContent = boyspoints;
+            feedbackBoyspoints.textContent = boyspoints;
+          } else {
+            girlspoints += question.points;
+            questionGirlspoints.textContent = girlspoints;
+            feedbackGirlspoints.textContent = girlspoints;
+          }
+
+          // Play correct sound
+          try {
+            correctSound.play();
+          } catch (e) {
+            console.log("Sound playback issue:", e);
+          }
+        } else {
+          // Play incorrect sound
+          try {
+            incorrectSound.play();
+          } catch (e) {
+            console.log("Sound playback issue:", e);
+          }
+        }
+
+        // Hide question screen, show feedback screen
+        questionScreen.classList.remove("active");
+        feedbackScreen.classList.add("active");
+
+        // Display feedback
+        if (isCorrect) {
+          feedbackResult.textContent = "إجابة صحيحة!";
+          feedbackResult.classList.add("correct");
+          feedbackResult.classList.remove("incorrect");
+          correctAnswerContainer.style.display = "none";
+        } else {
+          feedbackResult.textContent = "إجابة خاطئة!";
+          feedbackResult.classList.add("incorrect");
+          feedbackResult.classList.remove("correct");
+          correctAnswerContainer.style.display = "block";
+          correctAnswerText.textContent = question.correctAnswer;
+        }
+      }
+
+      // Move to the next question
+      function nextQuestion() {
+        // Switch teams
+        currentTeam = currentTeam === "boys" ? "girls" : "boys";
+        currentTeamName.textContent =
+          currentTeam === "boys" ? boysTeamName : girlsTeamName;
+
+        // Move to the next question
+        currentQuestion++;
+
+        // Hide feedback screen
+        feedbackScreen.classList.remove("active");
+
+        // Check if the quiz is over
+        if (currentQuestion >= quizQuestions.length) {
+          endQuiz();
+        } else {
+          // Show question screen with next question
+          questionScreen.classList.add("active");
+          displayQuestion();
+        }
+      }
+
+      // End the quiz and show results
+      function endQuiz() {
+        // Update final pointss
+        endBoyspoints.textContent = boyspoints;
+        endGirlspoints.textContent = girlspoints;
+
+        // Determine winner
+        if (boyspoints > girlspoints) {
+          winnerTeam.textContent = boysTeamName;
+        } else if (girlspoints > boyspoints) {
+          winnerTeam.textContent = girlsTeamName;
+        } else {
+          winnerTeam.textContent = "تعادل!";
+        }
+
+        // Create confetti effect
+        createConfetti();
+
+        // Play winner sound
+        try {
+          winnerSound.play();
+        } catch (e) {
+          console.log("Sound playback issue:", e);
+        }
+
+        // Show end screen
+        endScreen.classList.add("active");
+      }
+
+      // Restart the quiz
+      function restartQuiz() {
+        // Reset variables
+        boyspoints = 0;
+        girlspoints = 0;
+        currentQuestion = 0;
+        selectedOption = null;
+        currentTeam = "boys";
+
+        // Reset displays
+        boyspointsDisplay.textContent = "0";
+        girlspointsDisplay.textContent = "0";
+        questionBoyspoints.textContent = "0";
+        questionGirlspoints.textContent = "0";
+
+        // Clear confetti
+        confettiContainer.innerHTML = "";
+
+        // Hide end screen, show start screen
+        endScreen.classList.remove("active");
+        startScreen.classList.add("active");
+
+        // Add animation to start screen
+        addEntryAnimation(startScreen);
+      }
+
+      // Helper function to convert numbers to Arabic numerals
+      function convertToArabicNumbers(num) {
+        const arabicNumbers = [
+          "٠",
+          "١",
+          "٢",
+          "٣",
+          "٤",
+          "٥",
+          "٦",
+          "٧",
+          "٨",
+          "٩",
+        ];
+        return num
+          .toString()
+          .split("")
+          .map((digit) => arabicNumbers[digit] || digit)
+          .join("");
+      }
+
+      // Call init function when the document is loaded
+      document.addEventListener("DOMContentLoaded", init);
+    </script>
+  </body>
+</html>
