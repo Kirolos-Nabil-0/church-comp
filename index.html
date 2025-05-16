@@ -2451,14 +2451,28 @@
 
       // Sound effects
       const correctSound = new Audio(
-        "data:audio/mp3;base64,SUQzAwAAAAAAJlRQRTEAAAAcAAAAU291bmRKYXkuY29tIFNvdW5kIEVmZmVjdHMAAA=="
+        window.location.href.replace(/\/[^/]*$/, "/") + "correct.mp3"
       );
       const incorrectSound = new Audio(
-        "data:audio/mp3;base64,SUQzAwAAAAAAJlRQRTEAAAAcAAAAU291bmRKYXkuY29tIFNvdW5kIEVmZmVjdHMAAA=="
+        window.location.href.replace(/\/[^/]*$/, "/") + "wrong.mp3"
       );
       const winnerSound = new Audio(
-        "data:audio/mp3;base64,SUQzAwAAAAAAJlRQRTEAAAAcAAAAU291bmRKYXkuY29tIFNvdW5kIEVmZmVjdHMAAA=="
+        window.location.href.replace(/\/[^/]*$/, "/") + "winner.mp3"
       );
+
+      // Add error handlers to detect audio loading issues
+      correctSound.onerror = (e) => {
+        console.error("Error loading correct sound:", e);
+        console.log("Correct sound path:", correctSound.src);
+      };
+      incorrectSound.onerror = (e) => {
+        console.error("Error loading incorrect sound:", e);
+        console.log("Incorrect sound path:", incorrectSound.src);
+      };
+      winnerSound.onerror = (e) => {
+        console.error("Error loading winner sound:", e);
+        console.log("Winner sound path:", winnerSound.src);
+      };
 
       // Initialize the application
       function init() {
